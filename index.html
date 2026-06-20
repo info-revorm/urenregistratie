@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>revorm · urenregistratie</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#4f46e5">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="revorm uren">
+<style>
+:root{
+  --accent:#4f46e5; --accent-d:#3730a3; --accent-l:#eef2ff;
+  --bg:#f7f7fb; --card:#ffffff; --line:#e5e7eb; --line2:#eceef3;
+  --txt:#1f2430; --muted:#6b7280; --wknd:#fafafc; --ok:#059669; --danger:#dc2626;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:14px;}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:14px 22px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:10;}
+.brand{font-weight:700;font-size:18px;letter-spacing:-.5px;color:var(--accent);}
+.brand span{color:var(--txt);font-weight:500;}
+nav{display:flex;gap:4px;margin-left:8px;}
+nav button{background:none;border:none;padding:8px 14px;border-radius:8px;font-size:14px;color:var(--muted);cursor:pointer;font-weight:500;}
+nav button.active{background:var(--accent-l);color:var(--accent-d);}
+nav button:hover:not(.active){background:#f1f1f5;}
+main{max-width:1100px;margin:22px auto;padding:0 22px 60px;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;}
+h2{margin:0 0 4px;font-size:17px;}
+.sub{color:var(--muted);margin:0 0 16px;font-size:13px;}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.btn{background:var(--accent);color:#fff;border:none;padding:9px 15px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;}
+.btn:hover{background:var(--accent-d);}
+.btn.ghost{background:#f1f1f5;color:var(--txt);}
+.btn.ghost:hover{background:#e6e6ec;}
+.btn.sm{padding:5px 10px;font-size:12.5px;border-radius:7px;}
+.btn.danger{background:#fff;color:var(--danger);border:1px solid #f3c9c9;}
+.btn.danger:hover{background:#fdf0f0;}
+.pill{font-weight:600;padding:6px 12px;background:var(--accent-l);color:var(--accent-d);border-radius:8px;min-width:230px;text-align:center;}
+input[type=text],input[type=number],input[type=month],select{font-family:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--txt);}
+input:focus,select:focus{outline:2px solid var(--accent-l);border-color:var(--accent);}
+table{border-collapse:collapse;width:100%;}
+.grid th,.grid td{border:1px solid var(--line2);padding:0;text-align:center;}
+.grid thead th{background:#fbfbfd;font-size:12px;color:var(--muted);font-weight:600;padding:8px 6px;}
+.grid thead th.wknd,.grid td.wknd{background:var(--wknd);}
+.grid .namecol{text-align:left;padding:10px 12px;min-width:220px;font-weight:500;}
+.grid thead th.namecol{font-size:13px;}
+.client-row td{background:var(--accent-l);color:var(--accent-d);font-weight:700;text-align:left;padding:8px 12px;font-size:13px;}
+.day-cell input{width:100%;border:none;text-align:center;padding:11px 2px;background:transparent;font-size:14px;border-radius:0;}
+.day-cell input:focus{outline:2px solid var(--accent);outline-offset:-2px;background:var(--accent-l);}
+.rowtot,.daytot{font-weight:600;background:#fbfbfd;padding:10px 8px;min-width:64px;}
+.totrow td{border-top:2px solid var(--line);font-weight:700;padding:11px 8px;background:#f4f4f8;}
+.grand{color:var(--accent-d);}
+.rep th,.rep td{border-bottom:1px solid var(--line2);padding:9px 12px;text-align:left;}
+.rep th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+.rep td.num,.rep th.num{text-align:right;font-variant-numeric:tabular-nums;}
+.rep .clienthead td{background:var(--accent-l);color:var(--accent-d);font-weight:700;}
+.rep .subtot td{font-weight:600;background:#fbfbfd;}
+.rep .total td{font-weight:700;border-top:2px solid var(--line);font-size:15px;}
+.muted{color:var(--muted);}
+.empty{text-align:center;color:var(--muted);padding:34px;}
+.mgmt-client{border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin-bottom:14px;}
+.mgmt-client h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:10px;}
+.proj-line{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line2);}
+.proj-line .pn{flex:1;font-weight:500;}
+.proj-line.arch .pn{color:var(--muted);text-decoration:line-through;}
+.addrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-size:12px;color:var(--muted);font-weight:600;}
+.note{background:#fffbeb;border:1px solid #fde68a;color:#92400e;padding:10px 14px;border-radius:9px;font-size:12.5px;margin-bottom:16px;}
+.tag{font-size:11px;background:#f1f1f5;color:var(--muted);padding:2px 7px;border-radius:5px;font-weight:600;}
+.right{margin-left:auto;}
+.hide{display:none;}
+.syncchip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:#f1f1f5;color:var(--muted);}
+.syncchip .dot{width:8px;height:8px;border-radius:50%;background:#9ca3af;flex:none;}
+.syncchip.ok{background:#ecfdf5;color:#047857;} .syncchip.ok .dot{background:#10b981;}
+.syncchip.sync{background:var(--accent-l);color:var(--accent-d);} .syncchip.sync .dot{background:var(--accent);animation:pulse 1s infinite;}
+.syncchip.off{background:#fff7ed;color:#9a3412;} .syncchip.off .dot{background:#f59e0b;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.account{font-size:13px;color:var(--muted);}
+.account b{color:var(--txt);}
+.headsync{margin-left:8px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">revorm<span> · urenregistratie</span></div>
+  <nav id="nav">
+    <button data-tab="week" class="active">Weekoverzicht</button>
+    <button data-tab="maand">Maandrapport</button>
+    <button data-tab="akkoord">Goedkeuring</button>
+    <button data-tab="beheer">Beheer</button>
+  </nav>
+  <span class="right syncchip headsync" id="headSync" title="Synchronisatiestatus"><span class="dot"></span><span id="headSyncText">Lokaal</span></span>
+</header>
+<main>
+  <section id="tab-week" class="tab"></section>
+  <section id="tab-maand" class="tab hide"></section>
+  <section id="tab-akkoord" class="tab hide"></section>
+  <section id="tab-beheer" class="tab hide"></section>
+</main>
+<script>
+"use strict";
+
+/* ---------- State & persistence ---------- */
+const STORE_KEY = "revorm_uren_v1";
+const DAYNAMES = ["maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"];
+const DAYABBR  = ["ma","di","wo","do","vr","za","zo"];
+const MONTHS   = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
+
+let state = loadState();
+
+function defaultState(){
+  return {
+    settings:{ consultant:"revorm", kvk:"", manager:"" },
+    clients:[],   // {id,name}
+    projects:[],  // {id,clientId,name,rate(number|null),archived}
+    entries:{}    // "projId|YYYY-MM-DD": hours(number)
+  };
+}
+function normalizeState(s){
+  s = s || {};
+  return Object.assign(defaultState(), s, {settings:Object.assign(defaultState().settings, s.settings||{})});
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return defaultState();
+    return normalizeState(JSON.parse(raw));
+  }catch(e){ return defaultState(); }
+}
+/* Schrijft alleen naar de browser (lokale kopie / offline). */
+function saveLocal(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  catch(e){ alert("Let op: lokaal opslaan is mislukt. Maak een JSON-backup via Beheer."); }
+}
+/* Bewaart lokaal én plant een cloud-synchronisatie (indien aangemeld). */
+function save(){
+  saveLocal();
+  if(typeof scheduleCloudFlush === "function") scheduleCloudFlush();
+}
+
+/* Hooks voor de sync-laag (sync.js) */
+function getState(){ return state; }
+function setState(s){ state = normalizeState(s); }
+function stateIsEmpty(){
+  return state.clients.length===0 && state.projects.length===0 && Object.keys(state.entries).length===0;
+}
+function rerenderAll(){ show(currentTab); }
+
+/* Sync-/login-status in de UI */
+let syncStatusText = "Lokaal", syncStatusKind = "";
+let msAccount = null;
+function setSyncStatus(text, kind){
+  syncStatusText = text; syncStatusKind = kind || "";
+  const chip = document.getElementById("headSync");
+  const txt = document.getElementById("headSyncText");
+  if(txt) txt.textContent = text;
+  if(chip) chip.className = "right syncchip headsync " + syncStatusKind;
+  const bTxt = document.getElementById("beheerSyncText");
+  const bChip = document.getElementById("beheerSyncChip");
+  if(bTxt) bTxt.textContent = text;
+  if(bChip) bChip.className = "syncchip " + syncStatusKind;
+}
+function updateAuthUI(account){
+  msAccount = account || null;
+  if(currentTab === "beheer") renderBeheer();
+}
+
+function uid(){ return "id"+Math.random().toString(36).slice(2,9); }
+
+/* ---------- Date helpers (local, Monday-first) ---------- */
+function pad(n){ return n<10?"0"+n:""+n; }
+function keyOf(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function startOfWeek(d){
+  const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  const wd=(x.getDay()+6)%7; // 0=Mon
+  x.setDate(x.getDate()-wd);
+  return x;
+}
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function weekDates(monday){ return Array.from({length:7},(_,i)=>addDays(monday,i)); }
+function isoWeek(d){
+  const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  const day=(x.getDay()+6)%7;
+  x.setDate(x.getDate()-day+3);
+  const firstThu=new Date(x.getFullYear(),0,4);
+  const fday=(firstThu.getDay()+6)%7;
+  firstThu.setDate(firstThu.getDate()-fday+3);
+  return 1+Math.round((x-firstThu)/(7*86400000));
+}
+
+/* ---------- Number formatting ---------- */
+function fmtH(n){ return n.toLocaleString("nl-NL",{maximumFractionDigits:2}); }
+function fmtEur(n){ return n.toLocaleString("nl-NL",{style:"currency",currency:"EUR"}); }
+function parseH(v){
+  if(v==null) return 0;
+  const s=(""+v).trim().replace(",",".").replace(/[^0-9.]/g,"");
+  if(s==="") return 0;
+  const n=parseFloat(s);
+  return isNaN(n)||n<0?0:n;
+}
+
+/* ---------- Lookups ---------- */
+function clientName(id){ const c=state.clients.find(c=>c.id===id); return c?c.name:"(onbekend)"; }
+function projectsOf(id,includeArch){ return state.projects.filter(p=>p.clientId===id && (includeArch||!p.archived)); }
+function getEntry(pid,k){ return state.entries[pid+"|"+k]||0; }
+function setEntry(pid,k,h){
+  const key=pid+"|"+k;
+  if(h>0) state.entries[key]=h; else delete state.entries[key];
+}
+function monthHours(pid,year,month){ // month 0-based
+  let t=0, pref=pid+"|"+year+"-"+pad(month+1)+"-";
+  for(const k in state.entries){ if(k.indexOf(pref)===0) t+=state.entries[k]; }
+  return t;
+}
+function dayHours(pid,k){ return getEntry(pid,k); }
+
+/* ===================================================================
+   XLSX engine — builds a real .xlsx (zip of XML) in the browser.
+   Styles index (s=):
+   0 default      1 bold          2 header(white/indigo)
+   3 bordered     4 bordered num  5 bordered bold
+   6 bordered bold num  7 title    8 bordered center
+   9 subheader    10 bordered eur 11 bordered bold eur  12 fill bold
+   =================================================================== */
+function crc32(bytes){
+  let crc=-1;
+  for(let i=0;i<bytes.length;i++){
+    let c=(crc^bytes[i])&0xff;
+    for(let k=0;k<8;k++) c=c&1?(0xEDB88320^(c>>>1)):(c>>>1);
+    crc=(crc>>>8)^c;
+  }
+  return (crc^-1)>>>0;
+}
+function buildZip(files){
+  const enc=new TextEncoder(), parts=[], central=[]; let offset=0;
+  const push=a=>{ parts.push(a); offset+=a.length; };
+  for(const f of files){
+    const name=enc.encode(f.name), data=f.data, crc=crc32(data), loc=offset;
+    const h=new Uint8Array(30+name.length), dv=new DataView(h.buffer);
+    dv.setUint32(0,0x04034b50,true); dv.setUint16(4,20,true); dv.setUint16(6,0x0800,true);
+    dv.setUint16(8,0,true); dv.setUint16(10,0,true); dv.setUint16(12,0,true);
+    dv.setUint32(14,crc,true); dv.setUint32(18,data.length,true); dv.setUint32(22,data.length,true);
+    dv.setUint16(26,name.length,true); dv.setUint16(28,0,true); h.set(name,30);
+    push(h); push(data);
+    const c=new Uint8Array(46+name.length), cd=new DataView(c.buffer);
+    cd.setUint32(0,0x02014b50,true); cd.setUint16(4,20,true); cd.setUint16(6,20,true);
+    cd.setUint16(8,0x0800,true); cd.setUint16(10,0,true); cd.setUint16(12,0,true); cd.setUint16(14,0,true);
+    cd.setUint32(16,crc,true); cd.setUint32(20,data.length,true); cd.setUint32(24,data.length,true);
+    cd.setUint16(28,name.length,true); cd.setUint32(42,loc,true); c.set(name,46);
+    central.push(c);
+  }
+  const cdStart=offset; let cdSize=0;
+  for(const c of central){ push(c); cdSize+=c.length; }
+  const e=new Uint8Array(22), ed=new DataView(e.buffer);
+  ed.setUint32(0,0x06054b50,true); ed.setUint16(8,central.length,true); ed.setUint16(10,central.length,true);
+  ed.setUint32(12,cdSize,true); ed.setUint32(16,cdStart,true); push(e);
+  let total=0; for(const p of parts) total+=p.length;
+  const out=new Uint8Array(total); let o=0;
+  for(const p of parts){ out.set(p,o); o+=p.length; }
+  return out;
+}
+function xesc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function colName(n){ let s=""; n++; while(n>0){ const m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=Math.floor((n-1)/26);} return s; }
+
+const STYLES_XML='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+
+'<numFmts count="2"><numFmt numFmtId="164" formatCode="&quot;€&quot;\\ #,##0.00"/><numFmt numFmtId="165" formatCode="0.00"/></numFmts>'+
+'<fonts count="5">'+
+'<font><sz val="11"/><name val="Calibri"/></font>'+
+'<font><b/><sz val="11"/><name val="Calibri"/></font>'+
+'<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>'+
+'<font><b/><sz val="16"/><color rgb="FF312E81"/><name val="Calibri"/></font>'+
+'<font><b/><sz val="12"/><name val="Calibri"/></font>'+
+'</fonts>'+
+'<fills count="4">'+
+'<fill><patternFill patternType="none"/></fill>'+
+'<fill><patternFill patternType="gray125"/></fill>'+
+'<fill><patternFill patternType="solid"><fgColor rgb="FF4F46E5"/><bgColor indexed="64"/></patternFill></fill>'+
+'<fill><patternFill patternType="solid"><fgColor rgb="FFE0E7FF"/><bgColor indexed="64"/></patternFill></fill>'+
+'</fills>'+
+'<borders count="2">'+
+'<border><left/><right/><top/><bottom/><diagonal/></border>'+
+'<border><left style="thin"><color rgb="FFB8BCC8"/></left><right style="thin"><color rgb="FFB8BCC8"/></right><top style="thin"><color rgb="FFB8BCC8"/></top><bottom style="thin"><color rgb="FFB8BCC8"/></bottom><diagonal/></border>'+
+'</borders>'+
+'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'+
+'<cellXfs count="13">'+
+'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'+
+'<xf fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>'+
+'<xf fontId="2" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'+
+'<xf fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1"/>'+
+'<xf numFmtId="165" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyNumberFormat="1"/>'+
+'<xf fontId="1" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1"/>'+
+'<xf numFmtId="165" fontId="1" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyNumberFormat="1"/>'+
+'<xf fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/>'+
+'<xf fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center"/></xf>'+
+'<xf fontId="4" fillId="0" borderId="0" xfId="0" applyFont="1"/>'+
+'<xf numFmtId="164" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyNumberFormat="1"/>'+
+'<xf numFmtId="164" fontId="1" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyNumberFormat="1"/>'+
+'<xf fontId="1" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+'</cellXfs>'+
+'<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'+
+'</styleSheet>';
+
+// cell helpers: t(text,style) / n(number,style) / blank
+function t(v,s){ return {t:"s",v:v==null?"":v,s:s||0}; }
+function num(v,s){ return {t:"n",v:v,s:s||0}; }
+function sheetXml(sh){
+  let cols="";
+  if(sh.cols&&sh.cols.length){
+    cols="<cols>";
+    sh.cols.forEach((w,i)=>{ if(w) cols+='<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>'; });
+    cols+="</cols>";
+  }
+  let body="";
+  sh.rows.forEach((row,ri)=>{
+    let cells="";
+    row.forEach((c,ci)=>{
+      if(c==null) return;
+      const ref=colName(ci)+(ri+1), sa=c.s?' s="'+c.s+'"':"";
+      if(c.t==="n") cells+='<c r="'+ref+'"'+sa+'><v>'+c.v+'</v></c>';
+      else cells+='<c r="'+ref+'"'+sa+' t="inlineStr"><is><t xml:space="preserve">'+xesc(c.v)+'</t></is></c>';
+    });
+    body+='<row r="'+(ri+1)+'">'+cells+'</row>';
+  });
+  let merges="";
+  if(sh.merges&&sh.merges.length){
+    merges='<mergeCells count="'+sh.merges.length+'">';
+    sh.merges.forEach(m=>{ merges+='<mergeCell ref="'+colName(m.sc)+(m.sr+1)+':'+colName(m.ec)+(m.er+1)+'"/>'; });
+    merges+="</mergeCells>";
+  }
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+
+    '<sheetViews><sheetView workbookViewId="0"/></sheetViews>'+
+    '<sheetFormatPr defaultRowHeight="15"/>'+cols+
+    '<sheetData>'+body+'</sheetData>'+merges+'</worksheet>';
+}
+function safeSheetName(n){ return (n||"Blad").replace(/[\\\/\?\*\[\]:]/g,"-").slice(0,31); }
+function buildWorkbook(sheets){
+  const enc=new TextEncoder();
+  let sheetTags="", rels="", overrides="";
+  sheets.forEach((sh,i)=>{
+    const rid="rId"+(i+1);
+    sheetTags+='<sheet name="'+xesc(safeSheetName(sh.name))+'" sheetId="'+(i+1)+'" r:id="'+rid+'"/>';
+    rels+='<Relationship Id="'+rid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>';
+    overrides+='<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
+  });
+  const stylesRid="rId"+(sheets.length+1);
+  rels+='<Relationship Id="'+stylesRid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
+  const files=[];
+  files.push({name:"[Content_Types].xml",data:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+overrides+'</Types>')});
+  files.push({name:"_rels/.rels",data:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>')});
+  files.push({name:"xl/workbook.xml",data:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheetTags+'</sheets></workbook>')});
+  files.push({name:"xl/_rels/workbook.xml.rels",data:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+rels+'</Relationships>')});
+  files.push({name:"xl/styles.xml",data:enc.encode(STYLES_XML)});
+  sheets.forEach((sh,i)=>{ files.push({name:"xl/worksheets/sheet"+(i+1)+".xml",data:enc.encode(sheetXml(sh))}); });
+  return buildZip(files);
+}
+function downloadBytes(name,bytes,mime){
+  const blob=new Blob([bytes],{type:mime||"application/octet-stream"});
+  const url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url; a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },100);
+}
+function downloadXlsx(name,sheets){
+  downloadBytes(name,buildWorkbook(sheets),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+}
+
+/* ===================================================================
+   UI — navigation
+   =================================================================== */
+const TABS=["week","maand","akkoord","beheer"];
+let curMonday=startOfWeek(new Date());
+let repMonth=keyOf(new Date()).slice(0,7);   // YYYY-MM
+let akMonth=repMonth;
+let akClient="";
+let currentTab="week";
+
+function el(id){ return document.getElementById(id); }
+function show(tab){
+  currentTab=tab;
+  TABS.forEach(t=>{ el("tab-"+t).classList.toggle("hide", t!==tab); });
+  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
+  if(tab==="week") renderWeek();
+  if(tab==="maand") renderMaand();
+  if(tab==="akkoord") renderAkkoord();
+  if(tab==="beheer") renderBeheer();
+}
+document.getElementById("nav").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-tab]"); if(b) show(b.dataset.tab);
+});
+
+/* ===================================================================
+   WEEK OVERVIEW
+   =================================================================== */
+function renderWeek(){
+  const root=el("tab-week");
+  const days=weekDates(curMonday);
+  const wk=isoWeek(curMonday);
+  const last=days[6];
+  const range= curMonday.getMonth()===last.getMonth()
+     ? curMonday.getDate()+"–"+last.getDate()+" "+MONTHS[last.getMonth()]+" "+last.getFullYear()
+     : curMonday.getDate()+" "+MONTHS[curMonday.getMonth()]+" – "+last.getDate()+" "+MONTHS[last.getMonth()]+" "+last.getFullYear();
+
+  const activeClients=state.clients.filter(c=>projectsOf(c.id).length>0);
+
+  let html=`
+  <div class="card">
+    <div class="toolbar">
+      <button class="btn ghost sm" id="wkPrev">◀ Vorige</button>
+      <div class="pill">Week ${wk} · ${range}</div>
+      <button class="btn ghost sm" id="wkNext">Volgende ▶</button>
+      <button class="btn ghost sm" id="wkToday">Vandaag</button>
+      <span class="right muted">Vul uren in als getal (bijv. <b>7,5</b>)</span>
+    </div>`;
+
+  if(activeClients.length===0){
+    html+=`<div class="empty">Nog geen projecten. Voeg eerst een opdrachtgever en project toe bij <b>Beheer</b>.</div></div>`;
+    root.innerHTML=html; wireWeekNav(); return;
+  }
+
+  html+=`<div style="overflow-x:auto"><table class="grid"><thead><tr>
+     <th class="namecol">Opdrachtgever / project</th>`;
+  days.forEach((d,i)=>{
+    html+=`<th>${DAYABBR[i]}<br>${d.getDate()}/${d.getMonth()+1}</th>`;
+  });
+  html+=`<th class="rowtot">Totaal</th></tr></thead><tbody>`;
+
+  activeClients.forEach(c=>{
+    html+=`<tr class="client-row"><td colspan="9">${escapeHtml(c.name)}</td></tr>`;
+    projectsOf(c.id).forEach(p=>{
+      html+=`<tr><td class="namecol">${escapeHtml(p.name)}${p.rate?` <span class="tag">${fmtEur(p.rate)}/u</span>`:""}</td>`;
+      days.forEach((d,i)=>{
+        const k=keyOf(d), v=getEntry(p.id,k);
+        html+=`<td class="day-cell"><input type="text" inputmode="decimal" data-proj="${p.id}" data-date="${k}" value="${v?fmtH(v):""}"></td>`;
+      });
+      html+=`<td class="rowtot" data-rowtot="${p.id}">0</td></tr>`;
+    });
+  });
+
+  html+=`<tr class="totrow"><td class="namecol">Totaal per dag</td>`;
+  days.forEach((d,i)=>{ html+=`<td data-daytot="${i}">0</td>`; });
+  html+=`<td class="grand" data-grand>0</td></tr>`;
+  html+=`</tbody></table></div></div>`;
+  root.innerHTML=html;
+  wireWeekNav();
+  recalcWeek();
+
+  root.querySelector("table.grid").addEventListener("input",e=>{
+    const inp=e.target.closest("input[data-proj]"); if(!inp) return;
+    setEntry(inp.dataset.proj, inp.dataset.date, parseH(inp.value));
+    save(); recalcWeek();
+  });
+  root.querySelector("table.grid").addEventListener("change",e=>{
+    const inp=e.target.closest("input[data-proj]"); if(!inp) return;
+    const h=parseH(inp.value); inp.value=h?fmtH(h):"";
+  });
+}
+function wireWeekNav(){
+  const p=el("wkPrev"),n=el("wkNext"),t=el("wkToday");
+  if(p) p.onclick=()=>{ curMonday=addDays(curMonday,-7); renderWeek(); };
+  if(n) n.onclick=()=>{ curMonday=addDays(curMonday,7); renderWeek(); };
+  if(t) t.onclick=()=>{ curMonday=startOfWeek(new Date()); renderWeek(); };
+}
+function recalcWeek(){
+  const days=weekDates(curMonday), root=el("tab-week");
+  const dayTot=[0,0,0,0,0,0,0]; let grand=0;
+  root.querySelectorAll("[data-rowtot]").forEach(cell=>{
+    const pid=cell.dataset.rowtot; let rt=0;
+    days.forEach((d,i)=>{ const h=getEntry(pid,keyOf(d)); rt+=h; dayTot[i]+=h; });
+    cell.textContent=rt?fmtH(rt):"0"; grand+=rt;
+  });
+  days.forEach((d,i)=>{ const c=root.querySelector('[data-daytot="'+i+'"]'); if(c) c.textContent=dayTot[i]?fmtH(dayTot[i]):"0"; });
+  const g=root.querySelector("[data-grand]"); if(g) g.textContent=grand?fmtH(grand)+" u":"0";
+}
+function escapeHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+/* ===================================================================
+   MONTH REPORT (facturatie -> Snelstart)
+   =================================================================== */
+function monthLabel(ym){ const [y,m]=ym.split("-").map(Number); return MONTHS[m-1]+" "+y; }
+function reportRows(ym){
+  const [y,m]=ym.split("-").map(Number);
+  const out=[];
+  state.clients.forEach(c=>{
+    const projs=projectsOf(c.id,true).map(p=>({p,uren:monthHours(p.id,y,m-1)})).filter(x=>x.uren>0);
+    if(projs.length) out.push({client:c,projs});
+  });
+  return out;
+}
+function renderMaand(){
+  const data=reportRows(repMonth);
+  let grandU=0,grandB=0,anyRate=false;
+  data.forEach(g=>g.projs.forEach(x=>{ grandU+=x.uren; if(x.p.rate){ anyRate=true; grandB+=x.uren*x.p.rate; }}));
+
+  let html=`
+  <div class="card">
+    <h2>Maandrapport</h2>
+    <p class="sub">Totaal gewerkte uren per project — gebruik dit als basis voor je facturen in Snelstart.</p>
+    <div class="toolbar">
+      <div class="field"><label>Maand</label><input type="month" id="repMonth" value="${repMonth}"></div>
+      <button class="btn right" id="repXlsx">Exporteer naar Excel</button>
+    </div>`;
+
+  if(data.length===0){
+    html+=`<div class="empty">Geen uren geregistreerd in ${monthLabel(repMonth)}.</div></div>`;
+    el("tab-maand").innerHTML=html; wireMaand(); return;
+  }
+
+  html+=`<table class="rep"><thead><tr><th>Project</th><th class="num">Uren</th><th class="num">Tarief</th><th class="num">Bedrag</th></tr></thead><tbody>`;
+  data.forEach(g=>{
+    let cu=0,cb=0;
+    html+=`<tr class="clienthead"><td>${escapeHtml(g.client.name)}</td><td colspan="3"></td></tr>`;
+    g.projs.forEach(x=>{
+      cu+=x.uren; const b=x.p.rate?x.uren*x.p.rate:null; if(b) cb+=b;
+      html+=`<tr><td>${escapeHtml(x.p.name)}</td><td class="num">${fmtH(x.uren)}</td>
+        <td class="num">${x.p.rate?fmtEur(x.p.rate):"—"}</td>
+        <td class="num">${b!=null?fmtEur(b):"—"}</td></tr>`;
+    });
+    html+=`<tr class="subtot"><td>Subtotaal ${escapeHtml(g.client.name)}</td><td class="num">${fmtH(cu)}</td><td></td><td class="num">${cb?fmtEur(cb):"—"}</td></tr>`;
+  });
+  html+=`<tr class="total"><td>Totaal ${monthLabel(repMonth)}</td><td class="num">${fmtH(grandU)}</td><td></td><td class="num">${anyRate?fmtEur(grandB):"—"}</td></tr>`;
+  html+=`</tbody></table></div>`;
+  el("tab-maand").innerHTML=html;
+  wireMaand();
+}
+function wireMaand(){
+  const m=el("repMonth"); if(m) m.onchange=()=>{ repMonth=m.value||repMonth; renderMaand(); };
+  const x=el("repXlsx"); if(x) x.onclick=exportMaand;
+}
+function exportMaand(){
+  const data=reportRows(repMonth);
+  if(data.length===0){ alert("Geen uren in deze maand om te exporteren."); return; }
+  const rows=[];
+  rows.push([t("Urenoverzicht — "+monthLabel(repMonth),7)]);
+  rows.push([t("Consultant: "+(state.settings.consultant||"revorm"))]);
+  rows.push([]);
+  rows.push([t("Opdrachtgever",2),t("Project",2),t("Uren",2),t("Tarief",2),t("Bedrag",2)]);
+  let gu=0,gb=0;
+  data.forEach(g=>{
+    let cu=0,cb=0;
+    g.projs.forEach(x=>{
+      const b=x.p.rate?x.uren*x.p.rate:null; cu+=x.uren; if(b)cb+=b;
+      rows.push([t(g.client.name,3),t(x.p.name,3),num(x.uren,4),x.p.rate?num(x.p.rate,10):t("",3),b!=null?num(b,10):t("",3)]);
+    });
+    rows.push([t("Subtotaal "+g.client.name,12),t("",12),num(cu,12),t("",12),cb?num(cb,11):t("",12)]);
+    gu+=cu; gb+=cb;
+  });
+  rows.push([]);
+  rows.push([t("Totaal",5),t("",5),num(gu,6),t("",5),gb?num(gb,11):t("",5)]);
+  const sheet={name:monthLabel(repMonth),cols:[26,30,10,12,14],rows:rows,
+    merges:[{sr:0,sc:0,er:0,ec:4}]};
+  downloadXlsx("revorm_uren_"+repMonth+".xlsx",[sheet]);
+}
+
+/* ===================================================================
+   APPROVAL SHEET (per day, for manager sign-off)
+   =================================================================== */
+function akData(clientId,ym){
+  const [y,m]=ym.split("-").map(Number);
+  const projs=projectsOf(clientId,true).filter(p=>monthHours(p.id,y,m-1)>0);
+  const daysInMonth=new Date(y,m,0).getDate();
+  const rows=[];
+  for(let d=1; d<=daysInMonth; d++){
+    const date=new Date(y,m-1,d), k=keyOf(date);
+    const per=projs.map(p=>getEntry(p.id,k));
+    const tot=per.reduce((a,b)=>a+b,0);
+    if(tot>0) rows.push({date,k,per,tot});
+  }
+  return {projs,rows};
+}
+function renderAkkoord(){
+  if(!akClient && state.clients.length) akClient=state.clients[0].id;
+  let html=`
+  <div class="card">
+    <h2>Goedkeuring manager</h2>
+    <p class="sub">Per dag uitgesplitst overzicht voor één opdrachtgever, met akkoordveld voor de manager. Lever dit Excel-bestand aan ter goedkeuring.</p>
+    <div class="toolbar">
+      <div class="field"><label>Opdrachtgever</label><select id="akClient">${
+        state.clients.map(c=>`<option value="${c.id}" ${c.id===akClient?"selected":""}>${escapeHtml(c.name)}</option>`).join("")
+      }</select></div>
+      <div class="field"><label>Maand</label><input type="month" id="akMonth" value="${akMonth}"></div>
+      <button class="btn right" id="akXlsx">Exporteer goedkeuringsblad</button>
+    </div>`;
+
+  if(state.clients.length===0){
+    html+=`<div class="empty">Voeg eerst een opdrachtgever toe bij <b>Beheer</b>.</div></div>`;
+    el("tab-akkoord").innerHTML=html; return;
+  }
+
+  const {projs,rows}=akData(akClient,akMonth);
+  if(rows.length===0){
+    html+=`<div class="empty">Geen uren voor ${escapeHtml(clientName(akClient))} in ${monthLabel(akMonth)}.</div></div>`;
+    el("tab-akkoord").innerHTML=html; wireAkkoord(); return;
+  }
+
+  html+=`<table class="rep"><thead><tr><th>Datum</th><th>Dag</th>`;
+  projs.forEach(p=>{ html+=`<th class="num">${escapeHtml(p.name)}</th>`; });
+  html+=`<th class="num">Totaal</th></tr></thead><tbody>`;
+  let gt=0; const colTot=projs.map(()=>0);
+  rows.forEach(r=>{
+    gt+=r.tot;
+    html+=`<tr><td>${r.date.getDate()}-${r.date.getMonth()+1}-${r.date.getFullYear()}</td><td>${DAYNAMES[(r.date.getDay()+6)%7]}</td>`;
+    r.per.forEach((h,i)=>{ colTot[i]+=h; html+=`<td class="num">${h?fmtH(h):""}</td>`; });
+    html+=`<td class="num">${fmtH(r.tot)}</td></tr>`;
+  });
+  html+=`<tr class="total"><td>Totaal</td><td></td>`;
+  colTot.forEach(c=>{ html+=`<td class="num">${fmtH(c)}</td>`; });
+  html+=`<td class="num">${fmtH(gt)}</td></tr>`;
+  html+=`</tbody></table></div>`;
+  el("tab-akkoord").innerHTML=html;
+  wireAkkoord();
+}
+function wireAkkoord(){
+  const c=el("akClient"); if(c) c.onchange=()=>{ akClient=c.value; renderAkkoord(); };
+  const m=el("akMonth"); if(m) m.onchange=()=>{ akMonth=m.value||akMonth; renderAkkoord(); };
+  const x=el("akXlsx"); if(x) x.onclick=exportAkkoord;
+}
+function exportAkkoord(){
+  const {projs,rows}=akData(akClient,akMonth);
+  if(rows.length===0){ alert("Geen uren om te exporteren voor deze opdrachtgever/maand."); return; }
+  const ncol=2+projs.length+1;
+  const lastc=ncol-1;
+  const out=[];
+  out.push([t("Urenverantwoording",7)]);
+  out.push([t("Opdrachtgever:",1),t(clientName(akClient))]);
+  out.push([t("Consultant:",1),t(state.settings.consultant||"revorm")]);
+  out.push([t("Periode:",1),t(monthLabel(akMonth))]);
+  out.push([]);
+  // header
+  const head=[t("Datum",2),t("Dag",2)];
+  projs.forEach(p=>head.push(t(p.name,2)));
+  head.push(t("Totaal",2));
+  out.push(head);
+  // rows
+  const colTot=projs.map(()=>0); let gt=0;
+  rows.forEach(r=>{
+    gt+=r.tot;
+    const row=[t(r.date.getDate()+"-"+(r.date.getMonth()+1)+"-"+r.date.getFullYear(),8),t(DAYNAMES[(r.date.getDay()+6)%7],3)];
+    r.per.forEach((h,i)=>{ colTot[i]+=h; row.push(h?num(h,4):t("",3)); });
+    row.push(num(r.tot,6));
+    out.push(row);
+  });
+  // total
+  const totrow=[t("Totaal",5),t("",5)];
+  colTot.forEach(c=>totrow.push(num(c,6)));
+  totrow.push(num(gt,6));
+  out.push(totrow);
+  // signature block
+  out.push([]);
+  out.push([t("Akkoord voor bovenstaande urenverantwoording:",9)]);
+  out.push([]);
+  out.push([t("Naam manager:",1),t(state.settings.manager||"",3),t("",3)]);
+  out.push([t("Datum:",1),t("",3),t("",3)]);
+  out.push([t("Handtekening:",1),t("",3),t("",3)]);
+
+  const cols=[14,14]; projs.forEach(()=>cols.push(12)); cols.push(12);
+  const merges=[
+    {sr:0,sc:0,er:0,ec:lastc},
+    {sr:out.length-5,sc:0,er:out.length-5,ec:lastc},
+    {sr:out.length-3,sc:1,er:out.length-3,ec:Math.min(2,lastc)},
+    {sr:out.length-2,sc:1,er:out.length-2,ec:Math.min(2,lastc)},
+    {sr:out.length-1,sc:1,er:out.length-1,ec:Math.min(2,lastc)}
+  ];
+  const sheet={name:"Goedkeuring",cols:cols,rows:out,merges:merges};
+  const fn="revorm_goedkeuring_"+clientName(akClient).replace(/[^a-z0-9]+/gi,"_")+"_"+akMonth+".xlsx";
+  downloadXlsx(fn,[sheet]);
+}
+
+/* ===================================================================
+   BEHEER (clients, projects, settings, backup)
+   =================================================================== */
+function renderBeheer(){
+  const s=state.settings;
+  const signedIn = !!msAccount;
+  const who = signedIn ? (msAccount.name || msAccount.username || "aangemeld") : "";
+  let html=`
+  <div class="card">
+    <h2>Synchronisatie &amp; back-up</h2>
+    <p class="sub">Meld je aan met je Microsoft 365-account om je uren automatisch op te slaan in je eigen OneDrive en te synchroniseren tussen je iPhone en laptop.</p>
+    <div class="toolbar">
+      <span class="syncchip ${syncStatusKind}" id="beheerSyncChip"><span class="dot"></span><span id="beheerSyncText">${escapeHtml(syncStatusText)}</span></span>
+      ${signedIn
+        ? `<span class="account right">Aangemeld als <b>${escapeHtml(who)}</b></span>`
+        : `<span class="right"></span>`}
+    </div>
+    <div class="addrow">
+      ${signedIn
+        ? `<button class="btn" data-act="syncNow">Nu synchroniseren</button>
+           <button class="btn ghost" data-act="msSignout">Afmelden</button>`
+        : `<button class="btn" data-act="msSignin">Aanmelden bij Microsoft</button>`}
+    </div>
+    <div class="note">Je data staat veilig in je eigen OneDrive (map <b>Apps/revorm urenregistratie</b>) met automatische versiegeschiedenis. De knoppen hieronder blijven beschikbaar als extra handmatige back-up.</div>
+    <div class="addrow">
+      <button class="btn ghost" data-act="exportJson">Back-up downloaden (JSON)</button>
+      <button class="btn ghost" data-act="importJson">Back-up importeren</button>
+      <button class="btn danger right" data-act="wipe">Alles wissen</button>
+      <input type="file" id="importFile" accept="application/json,.json" class="hide">
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Opdrachtgevers &amp; projecten</h2>
+    <p class="sub">Beheer je opdrachtgevers en de projecten waarop je uren schrijft. Een tarief is optioneel (alleen voor rapportage).</p>
+    <div class="addrow">
+      <input type="text" id="newClient" placeholder="Naam nieuwe opdrachtgever" style="min-width:260px">
+      <button class="btn" data-act="addClient">+ Opdrachtgever</button>
+    </div>`;
+
+  if(state.clients.length===0){
+    html+=`<div class="empty">Nog geen opdrachtgevers.</div>`;
+  }
+  state.clients.forEach(c=>{
+    html+=`<div class="mgmt-client">
+      <h3>${escapeHtml(c.name)}
+        <button class="btn ghost sm" data-act="renameClient" data-id="${c.id}">Hernoemen</button>
+        <button class="btn danger sm right" data-act="delClient" data-id="${c.id}">Verwijderen</button>
+      </h3>`;
+    const projs=projectsOf(c.id,true);
+    if(projs.length===0) html+=`<div class="muted" style="padding:6px 0">Nog geen projecten.</div>`;
+    projs.forEach(p=>{
+      html+=`<div class="proj-line ${p.archived?"arch":""}">
+        <span class="pn">${escapeHtml(p.name)}</span>
+        <span class="tag">${p.rate?fmtEur(p.rate)+"/u":"geen tarief"}</span>
+        <button class="btn ghost sm" data-act="editProj" data-id="${p.id}">Bewerken</button>
+        <button class="btn ghost sm" data-act="archProj" data-id="${p.id}">${p.archived?"Activeren":"Archiveren"}</button>
+        <button class="btn danger sm" data-act="delProj" data-id="${p.id}">Verwijderen</button>
+      </div>`;
+    });
+    html+=`<div class="addrow">
+        <input type="text" data-newproj="${c.id}" placeholder="Naam nieuw project" style="min-width:220px">
+        <input type="text" data-newrate="${c.id}" placeholder="Tarief €/u (optioneel)" style="width:160px">
+        <button class="btn ghost" data-act="addProj" data-id="${c.id}">+ Project</button>
+      </div></div>`;
+  });
+  html+=`</div>
+
+  <div class="card">
+    <h2>Instellingen</h2>
+    <p class="sub">Deze gegevens verschijnen op je Excel-exports.</p>
+    <div class="addrow">
+      <div class="field"><label>Consultant / bedrijfsnaam</label><input type="text" id="setConsultant" value="${escapeHtml(s.consultant||"")}"></div>
+      <div class="field"><label>KvK (optioneel)</label><input type="text" id="setKvk" value="${escapeHtml(s.kvk||"")}"></div>
+      <div class="field"><label>Naam manager (optioneel)</label><input type="text" id="setManager" value="${escapeHtml(s.manager||"")}"></div>
+    </div>
+    <button class="btn sm" style="margin-top:10px" data-act="saveSettings">Instellingen opslaan</button>
+  </div>`;
+  el("tab-beheer").innerHTML=html;
+}
+
+document.getElementById("tab-beheer").addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]"); if(!b) return;
+  const act=b.dataset.act, id=b.dataset.id;
+  if(act==="msSignin"){ if(typeof msSignIn==="function") msSignIn(); }
+  else if(act==="msSignout"){ if(typeof msSignOut==="function") msSignOut(); }
+  else if(act==="syncNow"){ if(typeof msSyncNow==="function") msSyncNow(); }
+  else if(act==="addClient"){
+    const v=el("newClient").value.trim(); if(!v) return;
+    state.clients.push({id:uid(),name:v}); save(); renderBeheer();
+  }
+  else if(act==="renameClient"){
+    const c=state.clients.find(x=>x.id===id); const v=prompt("Nieuwe naam opdrachtgever:",c.name);
+    if(v&&v.trim()){ c.name=v.trim(); save(); renderBeheer(); }
+  }
+  else if(act==="delClient"){
+    const projs=projectsOf(id,true);
+    if(!confirm("Opdrachtgever en "+projs.length+" project(en) inclusief geregistreerde uren verwijderen?")) return;
+    projs.forEach(p=>deleteProjectData(p.id));
+    state.clients=state.clients.filter(x=>x.id!==id); save(); renderBeheer();
+  }
+  else if(act==="addProj"){
+    const ni=document.querySelector('[data-newproj="'+id+'"]'), ri=document.querySelector('[data-newrate="'+id+'"]');
+    const v=ni.value.trim(); if(!v) return;
+    const rate=parseH(ri.value);
+    state.projects.push({id:uid(),clientId:id,name:v,rate:rate>0?rate:null,archived:false});
+    save(); renderBeheer();
+  }
+  else if(act==="editProj"){
+    const p=state.projects.find(x=>x.id===id);
+    const nm=prompt("Projectnaam:",p.name); if(nm===null) return;
+    const rt=prompt("Tarief €/u (leeg = geen):",p.rate||"");
+    if(nm.trim()) p.name=nm.trim();
+    const r=parseH(rt); p.rate=r>0?r:null;
+    save(); renderBeheer();
+  }
+  else if(act==="archProj"){
+    const p=state.projects.find(x=>x.id===id); p.archived=!p.archived; save(); renderBeheer();
+  }
+  else if(act==="delProj"){
+    if(!confirm("Project en alle geregistreerde uren verwijderen?")) return;
+    deleteProjectData(id);
+    state.projects=state.projects.filter(x=>x.id!==id); save(); renderBeheer();
+  }
+  else if(act==="saveSettings"){
+    state.settings.consultant=el("setConsultant").value.trim()||"revorm";
+    state.settings.kvk=el("setKvk").value.trim();
+    state.settings.manager=el("setManager").value.trim();
+    save(); flash(b,"Opgeslagen ✓");
+  }
+  else if(act==="exportJson"){
+    const data=JSON.stringify(state,null,2);
+    downloadBytes("revorm_backup_"+keyOf(new Date())+".json",new TextEncoder().encode(data),"application/json");
+  }
+  else if(act==="importJson"){ el("importFile").click(); }
+  else if(act==="wipe"){
+    if(!confirm("ALLE gegevens wissen? Maak eerst een back-up. Dit kan niet ongedaan worden gemaakt.")) return;
+    state=defaultState(); save(); renderBeheer();
+  }
+});
+document.getElementById("tab-beheer").addEventListener("change",e=>{
+  if(e.target.id!=="importFile") return;
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const s=JSON.parse(r.result);
+      if(!s.clients||!s.projects||!s.entries) throw 0;
+      if(!confirm("Back-up importeren? Dit vervangt je huidige gegevens.")) return;
+      state=normalizeState(s);
+      save(); renderBeheer();
+    }catch(err){ alert("Dit bestand is geen geldige revorm-back-up."); }
+  };
+  r.readAsText(f);
+});
+function deleteProjectData(pid){
+  const pref=pid+"|";
+  for(const k in state.entries){ if(k.indexOf(pref)===0) delete state.entries[k]; }
+}
+function flash(btn,msg){ const o=btn.textContent; btn.textContent=msg; setTimeout(()=>btn.textContent=o,1200); }
+
+/* ===================================================================
+   INIT
+   =================================================================== */
+function seedIfEmpty(){
+  if(stateIsEmpty()){
+    const c=uid();
+    state.clients.push({id:c,name:"Voorbeeld opdrachtgever"});
+    state.projects.push({id:uid(),clientId:c,name:"Voorbeeld project",rate:95,archived:false});
+    saveLocal();
+  }
+}
+
+// 1) Direct renderen uit de lokale (offline) kopie zodat de app meteen bruikbaar is.
+show("week");
+
+// 2) Service worker registreren (alleen op http/https, niet bij lokaal file:// openen).
+if("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+
+// 3) De cloud-synchronisatie wordt gestart door sync.js (hieronder ingeladen),
+//    dat na het inloggen de data uit OneDrive ophaalt en samenvoegt.
+</script>
+<script src="msal-browser.min.js"></script>
+<script src="msal-config.js"></script>
+<script src="sync.js"></script>
+</body>
+</html>
