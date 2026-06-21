@@ -84,7 +84,9 @@ function mergeStates(base, server, local){
     settings: merge3Map(base.settings||{}, server.settings||{}, local.settings||{}),
     clients:  merge3List(base.clients||[],  server.clients||[],  local.clients||[]),
     projects: merge3List(base.projects||[], server.projects||[], local.projects||[]),
-    entries:  merge3Map(base.entries||{},   server.entries||{},   local.entries||{})
+    entries:  merge3Map(base.entries||{},   server.entries||{},   local.entries||{}),
+    leave:    merge3Map(base.leave||{},     server.leave||{},     local.leave||{}),
+    car:      merge3Map(base.car||{},       server.car||{},       local.car||{})
   };
 }
 

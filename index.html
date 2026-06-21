@@ -5,35 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>revorm · urenregistratie</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#4f46e5">
+<meta name="theme-color" content="#1D3557">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="revorm uren">
 <style>
 :root{
-  --accent:#4f46e5; --accent-d:#3730a3; --accent-l:#eef2ff;
-  --bg:#f7f7fb; --card:#ffffff; --line:#e5e7eb; --line2:#eceef3;
-  --txt:#1f2430; --muted:#6b7280; --wknd:#fafafc; --ok:#059669; --danger:#dc2626;
+  /* Revorm-huisstijl */
+  --accent:#C8102E; --accent-d:#A00D24; --accent-l:#FAE7EA;
+  --navy:#1D3557; --navy-d:#152740; --navy-l:#E7ECF3; --cream:#F5F1E8; --gold:#F4BE2C; --gold-d:#8A6D10;
+  --bg:#FBFAF5; --card:#ffffff; --line:#E7E2D9; --line2:#EFEAE1;
+  --txt:#111111; --muted:#8A7D73; --wknd:#FAF7F1; --ok:#1D7A4D; --danger:#C8102E;
+  --soft:#F1EDE4; --soft-d:#E7E2D9; --thead:#F7F3EC;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:14px;}
 header{background:var(--card);border-bottom:1px solid var(--line);padding:14px 22px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:10;}
-.brand{font-weight:700;font-size:18px;letter-spacing:-.5px;color:var(--accent);}
-.brand span{color:var(--txt);font-weight:500;}
+.brand{display:flex;align-items:center;gap:11px;}
+.brand .logo{height:24px;width:auto;display:block;}
+.brand .sub-brand{color:var(--muted);font-weight:500;font-size:14px;letter-spacing:-.2px;}
 nav{display:flex;gap:4px;margin-left:8px;}
 nav button{background:none;border:none;padding:8px 14px;border-radius:8px;font-size:14px;color:var(--muted);cursor:pointer;font-weight:500;}
 nav button.active{background:var(--accent-l);color:var(--accent-d);}
-nav button:hover:not(.active){background:#f1f1f5;}
+nav button:hover:not(.active){background:var(--soft);}
 main{max-width:1100px;margin:22px auto;padding:0 22px 60px;}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;}
-h2{margin:0 0 4px;font-size:17px;}
+h2{margin:0 0 4px;font-size:17px;color:var(--navy);}
 .sub{color:var(--muted);margin:0 0 16px;font-size:13px;}
 .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
 .btn{background:var(--accent);color:#fff;border:none;padding:9px 15px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;}
 .btn:hover{background:var(--accent-d);}
-.btn.ghost{background:#f1f1f5;color:var(--txt);}
-.btn.ghost:hover{background:#e6e6ec;}
+.btn.ghost{background:var(--soft);color:var(--txt);}
+.btn.ghost:hover{background:var(--soft-d);}
 .btn.sm{padding:5px 10px;font-size:12.5px;border-radius:7px;}
 .btn.danger{background:#fff;color:var(--danger);border:1px solid #f3c9c9;}
 .btn.danger:hover{background:#fdf0f0;}
@@ -42,21 +46,21 @@ input[type=text],input[type=number],input[type=month],select{font-family:inherit
 input:focus,select:focus{outline:2px solid var(--accent-l);border-color:var(--accent);}
 table{border-collapse:collapse;width:100%;}
 .grid th,.grid td{border:1px solid var(--line2);padding:0;text-align:center;}
-.grid thead th{background:#fbfbfd;font-size:12px;color:var(--muted);font-weight:600;padding:8px 6px;}
+.grid thead th{background:var(--thead);font-size:12px;color:var(--muted);font-weight:600;padding:8px 6px;}
 .grid thead th.wknd,.grid td.wknd{background:var(--wknd);}
 .grid .namecol{text-align:left;padding:10px 12px;min-width:220px;font-weight:500;}
 .grid thead th.namecol{font-size:13px;}
 .client-row td{background:var(--accent-l);color:var(--accent-d);font-weight:700;text-align:left;padding:8px 12px;font-size:13px;}
 .day-cell input{width:100%;border:none;text-align:center;padding:11px 2px;background:transparent;font-size:14px;border-radius:0;}
 .day-cell input:focus{outline:2px solid var(--accent);outline-offset:-2px;background:var(--accent-l);}
-.rowtot,.daytot{font-weight:600;background:#fbfbfd;padding:10px 8px;min-width:64px;}
-.totrow td{border-top:2px solid var(--line);font-weight:700;padding:11px 8px;background:#f4f4f8;}
+.rowtot,.daytot{font-weight:600;background:var(--thead);padding:10px 8px;min-width:64px;}
+.totrow td{border-top:2px solid var(--line);font-weight:700;padding:11px 8px;background:var(--soft-d);}
 .grand{color:var(--accent-d);}
 .rep th,.rep td{border-bottom:1px solid var(--line2);padding:9px 12px;text-align:left;}
 .rep th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
 .rep td.num,.rep th.num{text-align:right;font-variant-numeric:tabular-nums;}
 .rep .clienthead td{background:var(--accent-l);color:var(--accent-d);font-weight:700;}
-.rep .subtot td{font-weight:600;background:#fbfbfd;}
+.rep .subtot td{font-weight:600;background:var(--thead);}
 .rep .total td{font-weight:700;border-top:2px solid var(--line);font-size:15px;}
 .muted{color:var(--muted);}
 .empty{text-align:center;color:var(--muted);padding:34px;}
@@ -68,11 +72,11 @@ table{border-collapse:collapse;width:100%;}
 .addrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
 .field{display:flex;flex-direction:column;gap:4px;}
 .field label{font-size:12px;color:var(--muted);font-weight:600;}
-.note{background:#fffbeb;border:1px solid #fde68a;color:#92400e;padding:10px 14px;border-radius:9px;font-size:12.5px;margin-bottom:16px;}
-.tag{font-size:11px;background:#f1f1f5;color:var(--muted);padding:2px 7px;border-radius:5px;font-weight:600;}
+.note{background:#FEF6E0;border:1px solid #F4BE2C;color:#6A6258;padding:10px 14px;border-radius:9px;font-size:12.5px;margin-bottom:16px;}
+.tag{font-size:11px;background:var(--soft);color:var(--muted);padding:2px 7px;border-radius:5px;font-weight:600;}
 .right{margin-left:auto;}
 .hide{display:none;}
-.syncchip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:#f1f1f5;color:var(--muted);}
+.syncchip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--soft);color:var(--muted);}
 .syncchip .dot{width:8px;height:8px;border-radius:50%;background:#9ca3af;flex:none;}
 .syncchip.ok{background:#ecfdf5;color:#047857;} .syncchip.ok .dot{background:#10b981;}
 .syncchip.sync{background:var(--accent-l);color:var(--accent-d);} .syncchip.sync .dot{background:var(--accent);animation:pulse 1s infinite;}
@@ -81,23 +85,88 @@ table{border-collapse:collapse;width:100%;}
 .account{font-size:13px;color:var(--muted);}
 .account b{color:var(--txt);}
 .headsync{margin-left:8px;}
+
+/* Weekraster: horizontaal scrollen met vaste (plakkende) projectkolom */
+.gridwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.grid .namecol{position:sticky;left:0;z-index:2;background:var(--card);}
+.grid thead th.namecol{z-index:3;background:var(--thead);}
+.grid .client-row td.namecol{background:var(--accent-l);z-index:2;}
+.grid thead th{min-width:52px;}
+/* Verlof- en auto-rij */
+.grid .leave-row td.namecol{color:var(--gold-d);box-shadow:inset 3px 0 0 var(--gold),1px 0 0 var(--line2);}
+.grid .leave-row input{color:var(--gold-d);font-weight:600;}
+.grid .car-row td{background:var(--thead);padding:9px 2px;}
+.grid .car-row td.namecol{font-weight:600;}
+.grid .car-row input[type=checkbox]{width:20px;height:20px;cursor:pointer;accent-color:var(--navy);margin:0;}
+/* Weekoverzicht in navy i.p.v. het rode accent */
+.pill{background:var(--navy-l);color:var(--navy);}
+.grid .client-row td{background:var(--navy-l);color:var(--navy);}
+.grid .client-row td.namecol{background:var(--navy-l);}
+.grand{color:var(--navy);}
+.day-cell input:focus{outline-color:var(--navy);background:var(--navy-l);}
+/* Contract-uren */
+.budget{padding:10px 0;border-top:1px solid var(--line2);}
+.budget:first-of-type{border-top:none;}
+.budget-head{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:13px;flex-wrap:wrap;}
+.budget-head .over{color:var(--danger);font-weight:700;}
+.bar{height:9px;background:var(--soft-d);border-radius:999px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .3s;}
+.bar-fill.over{background:var(--danger);}
+.bsm{font-size:12px;}
+.budget-avg{margin-top:4px;font-size:13px;color:var(--accent-d);background:var(--accent-l);border-radius:7px;padding:6px 10px;display:inline-block;}
+.budget-avg.muted{color:var(--muted);background:var(--soft);}
+.done-head{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 4px;}
+.done-head .muted{font-weight:500;text-transform:none;letter-spacing:0;}
+.contract{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
+.contract-lbl{font-size:12px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;}
+.leave-total{font-size:16px;margin:4px 0 0;}
+
+/* Safe-area (notch / home-indicator) voor standalone PWA op iPhone */
+@supports(padding:max(0px)){
+  header{padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right));}
+  main{padding-bottom:max(60px,env(safe-area-inset-bottom));}
+}
+
+/* Mobiel (iPhone): smalle vaste projectkolom, ruime dagen, geen invoer-zoom */
+@media (max-width:640px){
+  header{padding:10px 14px;gap:10px;flex-wrap:wrap;}
+  .brand{font-size:16px;}
+  nav{order:3;flex:1 1 100%;margin-left:0;gap:3px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  nav button{padding:8px 12px;white-space:nowrap;}
+  .headsync{order:2;}
+  main{margin:14px auto;padding:0 12px 40px;}
+  .card{padding:14px;border-radius:12px;}
+  input[type=text],input[type=number],input[type=month],input[type=date],select{font-size:16px;}
+  .grid .namecol{min-width:104px;max-width:130px;padding:8px;font-size:12.5px;box-shadow:2px 0 4px -2px rgba(0,0,0,.12);}
+  .grid thead th.namecol{font-size:12px;}
+  .grid thead th{min-width:46px;font-size:11px;}
+  .day-cell input{font-size:16px;padding:12px 1px;}
+  .toolbar{gap:8px;}
+  .pill{min-width:0;flex:1 1 100%;order:-1;font-size:13px;}
+  .btn{padding:10px 14px;}
+  .rep th,.rep td{padding:8px 8px;}
+}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand">revorm<span> · urenregistratie</span></div>
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 150 38" role="img" aria-label="revorm">
+      <text x="1" y="28" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="31" font-weight="800" letter-spacing="-1.6" fill="#111111">revorm</text>
+      <rect x="3" y="32.5" width="66" height="4.2" rx="2.1" fill="#C8102E"/>
+    </svg>
+    <span class="sub-brand">urenregistratie</span>
+  </div>
   <nav id="nav">
     <button data-tab="week" class="active">Weekoverzicht</button>
-    <button data-tab="maand">Maandrapport</button>
-    <button data-tab="akkoord">Goedkeuring</button>
+    <button data-tab="rapport">Rapportage</button>
     <button data-tab="beheer">Beheer</button>
   </nav>
   <span class="right syncchip headsync" id="headSync" title="Synchronisatiestatus"><span class="dot"></span><span id="headSyncText">Lokaal</span></span>
 </header>
 <main>
   <section id="tab-week" class="tab"></section>
-  <section id="tab-maand" class="tab hide"></section>
-  <section id="tab-akkoord" class="tab hide"></section>
+  <section id="tab-rapport" class="tab hide"></section>
   <section id="tab-beheer" class="tab hide"></section>
 </main>
 <script>
@@ -114,9 +183,11 @@ let state = loadState();
 function defaultState(){
   return {
     settings:{ consultant:"revorm", kvk:"", manager:"" },
-    clients:[],   // {id,name}
+    clients:[],   // {id,name, budget?:{hours,start:"YYYY-MM-DD",end:"YYYY-MM-DD"}}
     projects:[],  // {id,clientId,name,rate(number|null),archived}
-    entries:{}    // "projId|YYYY-MM-DD": hours(number)
+    entries:{},   // "projId|YYYY-MM-DD": hours(number)
+    leave:{},     // "YYYY-MM-DD": hours(number)  — verlof, niet klant-gebonden
+    car:{}        // "YYYY-MM-DD": true            — auto gebruikt op die dag
   };
 }
 function normalizeState(s){
@@ -216,6 +287,37 @@ function monthHours(pid,year,month){ // month 0-based
   return t;
 }
 function dayHours(pid,k){ return getEntry(pid,k); }
+
+/* ---------- Verlof (niet klant-gebonden) ---------- */
+function getLeave(k){ return state.leave[k]||0; }
+function setLeave(k,h){ if(h>0) state.leave[k]=h; else delete state.leave[k]; }
+function leaveYearTotal(year){
+  let t=0, pref=year+"-";
+  for(const k in state.leave){ if(k.indexOf(pref)===0) t+=state.leave[k]; }
+  return t;
+}
+function weekHasLeave(monday){ return weekDates(monday).some(d=>getLeave(keyOf(d))>0); }
+
+/* ---------- Auto-gebruik per dag ---------- */
+function getCar(k){ return !!state.car[k]; }
+function setCar(k,on){ if(on) state.car[k]=true; else delete state.car[k]; }
+
+/* ---------- Contract-uren per klant ---------- */
+// Som van alle (ook gearchiveerde) klant-uren binnen [startISO,endISO] inclusief.
+function clientUsedHours(clientId, startISO, endISO){
+  let total=0;
+  const pids=state.projects.filter(p=>p.clientId===clientId).map(p=>p.id);
+  const pset=new Set(pids);
+  for(const k in state.entries){
+    const bar=k.indexOf("|"); if(bar<0) continue;
+    const pid=k.slice(0,bar), date=k.slice(bar+1);
+    if(!pset.has(pid)) continue;
+    if(startISO && date<startISO) continue;
+    if(endISO && date>endISO) continue;
+    total+=state.entries[k];
+  }
+  return total;
+}
 
 /* ===================================================================
    XLSX engine — builds a real .xlsx (zip of XML) in the browser.
@@ -371,11 +473,11 @@ function downloadXlsx(name,sheets){
 /* ===================================================================
    UI — navigation
    =================================================================== */
-const TABS=["week","maand","akkoord","beheer"];
+const TABS=["week","rapport","beheer"];
 let curMonday=startOfWeek(new Date());
 let repMonth=keyOf(new Date()).slice(0,7);   // YYYY-MM
-let akMonth=repMonth;
-let akClient="";
+let repClient="";                            // "" = alle opdrachtgevers
+const leaveWeeks=new Set();                    // weken (per maandag-datum) waar je de verlofrij hebt bijgevoegd
 let currentTab="week";
 
 function el(id){ return document.getElementById(id); }
@@ -384,8 +486,7 @@ function show(tab){
   TABS.forEach(t=>{ el("tab-"+t).classList.toggle("hide", t!==tab); });
   document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
   if(tab==="week") renderWeek();
-  if(tab==="maand") renderMaand();
-  if(tab==="akkoord") renderAkkoord();
+  if(tab==="rapport") renderRapport();
   if(tab==="beheer") renderBeheer();
 }
 document.getElementById("nav").addEventListener("click",e=>{
@@ -405,6 +506,7 @@ function renderWeek(){
      : curMonday.getDate()+" "+MONTHS[curMonday.getMonth()]+" – "+last.getDate()+" "+MONTHS[last.getMonth()]+" "+last.getFullYear();
 
   const activeClients=state.clients.filter(c=>projectsOf(c.id).length>0);
+  const showLeave = leaveWeeks.has(keyOf(curMonday)) || weekHasLeave(curMonday);
 
   let html=`
   <div class="card">
@@ -413,6 +515,7 @@ function renderWeek(){
       <div class="pill">Week ${wk} · ${range}</div>
       <button class="btn ghost sm" id="wkNext">Volgende ▶</button>
       <button class="btn ghost sm" id="wkToday">Vandaag</button>
+      ${showLeave?"":`<button class="btn ghost sm" id="wkAddLeave">+ Verlof</button>`}
       <span class="right muted">Vul uren in als getal (bijv. <b>7,5</b>)</span>
     </div>`;
 
@@ -421,7 +524,7 @@ function renderWeek(){
     root.innerHTML=html; wireWeekNav(); return;
   }
 
-  html+=`<div style="overflow-x:auto"><table class="grid"><thead><tr>
+  html+=`<div class="gridwrap"><table class="grid"><thead><tr>
      <th class="namecol">Opdrachtgever / project</th>`;
   days.forEach((d,i)=>{
     html+=`<th>${DAYABBR[i]}<br>${d.getDate()}/${d.getMonth()+1}</th>`;
@@ -429,9 +532,9 @@ function renderWeek(){
   html+=`<th class="rowtot">Totaal</th></tr></thead><tbody>`;
 
   activeClients.forEach(c=>{
-    html+=`<tr class="client-row"><td colspan="9">${escapeHtml(c.name)}</td></tr>`;
+    html+=`<tr class="client-row"><td class="namecol" colspan="9">${escapeHtml(c.name)}</td></tr>`;
     projectsOf(c.id).forEach(p=>{
-      html+=`<tr><td class="namecol">${escapeHtml(p.name)}${p.rate?` <span class="tag">${fmtEur(p.rate)}/u</span>`:""}</td>`;
+      html+=`<tr><td class="namecol">${escapeHtml(p.name)}</td>`;
       days.forEach((d,i)=>{
         const k=keyOf(d), v=getEntry(p.id,k);
         html+=`<td class="day-cell"><input type="text" inputmode="decimal" data-proj="${p.id}" data-date="${k}" value="${v?fmtH(v):""}"></td>`;
@@ -440,29 +543,51 @@ function renderWeek(){
     });
   });
 
+  if(showLeave){
+    html+=`<tr class="leave-row"><td class="namecol">🌴 Verlof</td>`;
+    days.forEach((d)=>{
+      const k=keyOf(d), v=getLeave(k);
+      html+=`<td class="day-cell"><input type="text" inputmode="decimal" data-leave="${k}" value="${v?fmtH(v):""}"></td>`;
+    });
+    html+=`<td class="rowtot" data-leavetot>0</td></tr>`;
+  }
+
   html+=`<tr class="totrow"><td class="namecol">Totaal per dag</td>`;
   days.forEach((d,i)=>{ html+=`<td data-daytot="${i}">0</td>`; });
   html+=`<td class="grand" data-grand>0</td></tr>`;
+
+  html+=`<tr class="car-row"><td class="namecol">🚗 Met de auto</td>`;
+  days.forEach((d)=>{
+    const k=keyOf(d);
+    html+=`<td><input type="checkbox" data-car="${k}" ${getCar(k)?"checked":""} aria-label="Auto gebruikt"></td>`;
+  });
+  html+=`<td class="rowtot" data-cartot>0</td></tr>`;
+
   html+=`</tbody></table></div></div>`;
   root.innerHTML=html;
   wireWeekNav();
   recalcWeek();
 
-  root.querySelector("table.grid").addEventListener("input",e=>{
-    const inp=e.target.closest("input[data-proj]"); if(!inp) return;
-    setEntry(inp.dataset.proj, inp.dataset.date, parseH(inp.value));
+  const tbl=root.querySelector("table.grid");
+  tbl.addEventListener("input",e=>{
+    const inp=e.target.closest("input[data-proj],input[data-leave]"); if(!inp) return;
+    if(inp.hasAttribute("data-proj")) setEntry(inp.dataset.proj, inp.dataset.date, parseH(inp.value));
+    else setLeave(inp.dataset.leave, parseH(inp.value));
     save(); recalcWeek();
   });
-  root.querySelector("table.grid").addEventListener("change",e=>{
-    const inp=e.target.closest("input[data-proj]"); if(!inp) return;
+  tbl.addEventListener("change",e=>{
+    const cb=e.target.closest("input[data-car]");
+    if(cb){ setCar(cb.dataset.car, cb.checked); save(); recalcWeek(); return; }
+    const inp=e.target.closest("input[data-proj],input[data-leave]"); if(!inp) return;
     const h=parseH(inp.value); inp.value=h?fmtH(h):"";
   });
 }
 function wireWeekNav(){
-  const p=el("wkPrev"),n=el("wkNext"),t=el("wkToday");
+  const p=el("wkPrev"),n=el("wkNext"),t=el("wkToday"),al=el("wkAddLeave");
   if(p) p.onclick=()=>{ curMonday=addDays(curMonday,-7); renderWeek(); };
   if(n) n.onclick=()=>{ curMonday=addDays(curMonday,7); renderWeek(); };
   if(t) t.onclick=()=>{ curMonday=startOfWeek(new Date()); renderWeek(); };
+  if(al) al.onclick=()=>{ leaveWeeks.add(keyOf(curMonday)); renderWeek(); };
 }
 function recalcWeek(){
   const days=weekDates(curMonday), root=el("tab-week");
@@ -474,6 +599,11 @@ function recalcWeek(){
   });
   days.forEach((d,i)=>{ const c=root.querySelector('[data-daytot="'+i+'"]'); if(c) c.textContent=dayTot[i]?fmtH(dayTot[i]):"0"; });
   const g=root.querySelector("[data-grand]"); if(g) g.textContent=grand?fmtH(grand)+" u":"0";
+  // Verlof telt NIET mee in de facturabele dag-/weektotalen — eigen regeltotaal.
+  const lt=root.querySelector("[data-leavetot]");
+  if(lt){ let s=0; days.forEach(d=>s+=getLeave(keyOf(d))); lt.textContent=s?fmtH(s):"0"; }
+  const ct=root.querySelector("[data-cartot]");
+  if(ct){ let n=0; days.forEach(d=>{ if(getCar(keyOf(d))) n++; }); ct.textContent=n?n+"×":"0"; }
 }
 function escapeHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
@@ -481,57 +611,117 @@ function escapeHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt
    MONTH REPORT (facturatie -> Snelstart)
    =================================================================== */
 function monthLabel(ym){ const [y,m]=ym.split("-").map(Number); return MONTHS[m-1]+" "+y; }
-function reportRows(ym){
+function fmtDateNL(iso){ if(!iso) return "…"; const [y,m,d]=iso.split("-"); return (+d)+"-"+(+m)+"-"+y; }
+function reportRows(ym, clientId){
   const [y,m]=ym.split("-").map(Number);
   const out=[];
   state.clients.forEach(c=>{
+    if(clientId && c.id!==clientId) return;
     const projs=projectsOf(c.id,true).map(p=>({p,uren:monthHours(p.id,y,m-1)})).filter(x=>x.uren>0);
     if(projs.length) out.push({client:c,projs});
   });
   return out;
 }
-function renderMaand(){
-  const data=reportRows(repMonth);
+/* Saldo + gemiddeld nog te schrijven uren per week tot de einddatum. */
+function contractPace(b, used){
+  const remaining=b.hours-used;
+  if(!b.end) return {remaining, weeks:null, avg:null, ended:false};
+  const today=new Date(); today.setHours(0,0,0,0);
+  const start=b.start ? new Date(b.start+"T00:00:00") : today;
+  const ref=start>today ? start : today;            // tel werkbare weken vanaf vandaag (of contractstart)
+  const end=new Date(b.end+"T00:00:00");
+  const days=Math.floor((end-ref)/86400000)+1;       // vandaag t/m einddag inclusief
+  if(days<=0) return {remaining, weeks:0, avg:null, ended:true};
+  const weeks=days/7;
+  return {remaining, weeks, avg:remaining/weeks, ended:false};
+}
+function renderRapport(){
+  const yy=Number(repMonth.split("-")[0]);
+  const data=reportRows(repMonth, repClient||null);
   let grandU=0,grandB=0,anyRate=false;
   data.forEach(g=>g.projs.forEach(x=>{ grandU+=x.uren; if(x.p.rate){ anyRate=true; grandB+=x.uren*x.p.rate; }}));
 
-  let html=`
-  <div class="card">
-    <h2>Maandrapport</h2>
-    <p class="sub">Totaal gewerkte uren per project — gebruik dit als basis voor je facturen in Snelstart.</p>
+  let html="";
+
+  /* Contract-uren per klant (alleen klanten met een afgesproken maximum) */
+  const bc=state.clients.filter(c=>c.budget && c.budget.hours>0);
+  if(bc.length){
+    html+=`<div class="card"><h2>Contract-uren</h2>
+      <p class="sub">Geschreven uren binnen de afgesproken contractperiode per opdrachtgever.</p>`;
+    bc.forEach(c=>{
+      const b=c.budget, used=clientUsedHours(c.id,b.start,b.end);
+      const pct=b.hours>0?Math.min(100,Math.round(used/b.hours*100)):0;
+      const over=used>b.hours;
+      const pace=over?null:contractPace(b,used);
+      let avgHtml="";
+      if(pace){
+        if(pace.avg!=null) avgHtml=`<div class="budget-avg">≈ <b>${fmtH(Math.round(pace.avg*10)/10)} u/week</b> te schrijven t/m ${fmtDateNL(b.end)} <span class="muted">(${fmtH(Math.round(pace.weeks*10)/10)} weken, ${fmtH(pace.remaining)} u saldo)</span></div>`;
+        else if(pace.ended) avgHtml=`<div class="budget-avg muted">Contractperiode verlopen — ${fmtH(pace.remaining)} u resterend</div>`;
+        else avgHtml=`<div class="budget-avg muted">Stel een einddatum in voor het wekelijks gemiddelde.</div>`;
+      }
+      html+=`<div class="budget">
+        <div class="budget-head"><b>${escapeHtml(c.name)}</b>
+          <span class="muted bsm">${fmtDateNL(b.start)} – ${fmtDateNL(b.end)}</span>
+          <span class="right ${over?"over":""}">${fmtH(used)} / ${fmtH(b.hours)} u</span></div>
+        <div class="bar"><div class="bar-fill ${over?"over":""}" style="width:${pct}%"></div></div>
+        <div class="muted bsm">${over?("⚠ "+fmtH(used-b.hours)+" u boven het afgesproken maximum"):(fmtH(b.hours-used)+" u resterend van "+fmtH(b.hours)+" u")}</div>
+        ${avgHtml}
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  /* Maandsamenvatting */
+  html+=`<div class="card">
+    <h2>Rapportage</h2>
+    <p class="sub">Gewerkte uren per project — basis voor je facturen in Snelstart.</p>
     <div class="toolbar">
       <div class="field"><label>Maand</label><input type="month" id="repMonth" value="${repMonth}"></div>
-      <button class="btn right" id="repXlsx">Exporteer naar Excel</button>
+      <div class="field"><label>Opdrachtgever</label><select id="repClient">
+        <option value="">Alle opdrachtgevers</option>
+        ${state.clients.map(c=>`<option value="${c.id}" ${c.id===repClient?"selected":""}>${escapeHtml(c.name)}</option>`).join("")}
+      </select></div>
+      <button class="btn right" id="repAllXlsx">Alle uren incl. auto (Excel)</button>
+      <button class="btn ghost" id="repXlsx">Maandoverzicht (Excel)</button>
     </div>`;
 
   if(data.length===0){
-    html+=`<div class="empty">Geen uren geregistreerd in ${monthLabel(repMonth)}.</div></div>`;
-    el("tab-maand").innerHTML=html; wireMaand(); return;
-  }
-
-  html+=`<table class="rep"><thead><tr><th>Project</th><th class="num">Uren</th><th class="num">Tarief</th><th class="num">Bedrag</th></tr></thead><tbody>`;
-  data.forEach(g=>{
-    let cu=0,cb=0;
-    html+=`<tr class="clienthead"><td>${escapeHtml(g.client.name)}</td><td colspan="3"></td></tr>`;
-    g.projs.forEach(x=>{
-      cu+=x.uren; const b=x.p.rate?x.uren*x.p.rate:null; if(b) cb+=b;
-      html+=`<tr><td>${escapeHtml(x.p.name)}</td><td class="num">${fmtH(x.uren)}</td>
-        <td class="num">${x.p.rate?fmtEur(x.p.rate):"—"}</td>
-        <td class="num">${b!=null?fmtEur(b):"—"}</td></tr>`;
+    html+=`<div class="empty">Geen uren geregistreerd in ${monthLabel(repMonth)}${repClient?" voor "+escapeHtml(clientName(repClient)):""}.</div>`;
+  }else{
+    html+=`<table class="rep"><thead><tr><th>Project</th><th class="num">Uren</th><th class="num">Tarief</th><th class="num">Bedrag</th></tr></thead><tbody>`;
+    data.forEach(g=>{
+      let cu=0,cb=0;
+      html+=`<tr class="clienthead"><td>${escapeHtml(g.client.name)}</td><td colspan="3"></td></tr>`;
+      g.projs.forEach(x=>{
+        cu+=x.uren; const b=x.p.rate?x.uren*x.p.rate:null; if(b) cb+=b;
+        html+=`<tr><td>${escapeHtml(x.p.name)}</td><td class="num">${fmtH(x.uren)}</td>
+          <td class="num">${x.p.rate?fmtEur(x.p.rate):"—"}</td>
+          <td class="num">${b!=null?fmtEur(b):"—"}</td></tr>`;
+      });
+      html+=`<tr class="subtot"><td>Subtotaal ${escapeHtml(g.client.name)}</td><td class="num">${fmtH(cu)}</td><td></td><td class="num">${cb?fmtEur(cb):"—"}</td></tr>`;
     });
-    html+=`<tr class="subtot"><td>Subtotaal ${escapeHtml(g.client.name)}</td><td class="num">${fmtH(cu)}</td><td></td><td class="num">${cb?fmtEur(cb):"—"}</td></tr>`;
-  });
-  html+=`<tr class="total"><td>Totaal ${monthLabel(repMonth)}</td><td class="num">${fmtH(grandU)}</td><td></td><td class="num">${anyRate?fmtEur(grandB):"—"}</td></tr>`;
-  html+=`</tbody></table></div>`;
-  el("tab-maand").innerHTML=html;
-  wireMaand();
+    html+=`<tr class="total"><td>Totaal ${monthLabel(repMonth)}</td><td class="num">${fmtH(grandU)}</td><td></td><td class="num">${anyRate?fmtEur(grandB):"—"}</td></tr>`;
+    html+=`</tbody></table>`;
+  }
+  html+=`</div>`;
+
+  /* Verlof-jaaroverzicht (ter info, geen saldo) */
+  const lh=leaveYearTotal(yy);
+  html+=`<div class="card"><h2>Verlof ${yy}</h2>
+    <p class="sub">Totaal opgenomen verlof dit jaar — alleen ter info, geen saldo.</p>
+    <p class="leave-total"><b>${fmtH(lh)} uur</b> <span class="muted">(~${fmtH(Math.round(lh/8*10)/10)} dagen à 8 u)</span></p></div>`;
+
+  el("tab-rapport").innerHTML=html;
+  wireRapport();
 }
-function wireMaand(){
-  const m=el("repMonth"); if(m) m.onchange=()=>{ repMonth=m.value||repMonth; renderMaand(); };
+function wireRapport(){
+  const m=el("repMonth"); if(m) m.onchange=()=>{ repMonth=m.value||repMonth; renderRapport(); };
+  const c=el("repClient"); if(c) c.onchange=()=>{ repClient=c.value; renderRapport(); };
   const x=el("repXlsx"); if(x) x.onclick=exportMaand;
+  const a=el("repAllXlsx"); if(a) a.onclick=exportAllHours;
 }
 function exportMaand(){
-  const data=reportRows(repMonth);
+  const data=reportRows(repMonth, repClient||null);
   if(data.length===0){ alert("Geen uren in deze maand om te exporteren."); return; }
   const rows=[];
   rows.push([t("Urenoverzicht — "+monthLabel(repMonth),7)]);
@@ -556,116 +746,57 @@ function exportMaand(){
 }
 
 /* ===================================================================
-   APPROVAL SHEET (per day, for manager sign-off)
+   ALLE UREN — platte lijst per dag+project (incl. tarief + auto)
    =================================================================== */
-function akData(clientId,ym){
-  const [y,m]=ym.split("-").map(Number);
-  const projs=projectsOf(clientId,true).filter(p=>monthHours(p.id,y,m-1)>0);
+function exportAllHours(){
+  const [y,m]=repMonth.split("-").map(Number);
   const daysInMonth=new Date(y,m,0).getDate();
-  const rows=[];
+  const filter=repClient||null;
+  const out=[];
+  out.push([t("Alle uren — "+monthLabel(repMonth),7)]);
+  out.push([t("Consultant: "+(state.settings.consultant||"revorm"))]);
+  if(filter) out.push([t("Opdrachtgever: "+clientName(filter))]);
+  out.push([]);
+  out.push([t("Datum",2),t("Dag",2),t("Opdrachtgever",2),t("Project",2),t("Uren",2),t("Tarief",2),t("Bedrag",2),t("Auto",2)]);
+
+  let tu=0, tb=0, dataRows=0;
   for(let d=1; d<=daysInMonth; d++){
     const date=new Date(y,m-1,d), k=keyOf(date);
-    const per=projs.map(p=>getEntry(p.id,k));
-    const tot=per.reduce((a,b)=>a+b,0);
-    if(tot>0) rows.push({date,k,per,tot});
-  }
-  return {projs,rows};
-}
-function renderAkkoord(){
-  if(!akClient && state.clients.length) akClient=state.clients[0].id;
-  let html=`
-  <div class="card">
-    <h2>Goedkeuring manager</h2>
-    <p class="sub">Per dag uitgesplitst overzicht voor één opdrachtgever, met akkoordveld voor de manager. Lever dit Excel-bestand aan ter goedkeuring.</p>
-    <div class="toolbar">
-      <div class="field"><label>Opdrachtgever</label><select id="akClient">${
-        state.clients.map(c=>`<option value="${c.id}" ${c.id===akClient?"selected":""}>${escapeHtml(c.name)}</option>`).join("")
-      }</select></div>
-      <div class="field"><label>Maand</label><input type="month" id="akMonth" value="${akMonth}"></div>
-      <button class="btn right" id="akXlsx">Exporteer goedkeuringsblad</button>
-    </div>`;
-
-  if(state.clients.length===0){
-    html+=`<div class="empty">Voeg eerst een opdrachtgever toe bij <b>Beheer</b>.</div></div>`;
-    el("tab-akkoord").innerHTML=html; return;
+    const dayLabel=d+"-"+m+"-"+y, dn=DAYNAMES[(date.getDay()+6)%7];
+    const auto=getCar(k)?"Ja":"";
+    state.clients.forEach(c=>{
+      if(filter && c.id!==filter) return;
+      projectsOf(c.id,true).forEach(p=>{
+        const h=getEntry(p.id,k); if(h<=0) return;
+        const amt=p.rate?h*p.rate:null; tu+=h; if(amt) tb+=amt; dataRows++;
+        out.push([t(dayLabel,8),t(dn,3),t(c.name,3),t(p.name,3),num(h,4),
+          p.rate?num(p.rate,10):t("",3), amt!=null?num(amt,10):t("",3), t(auto,8)]);
+      });
+    });
   }
 
-  const {projs,rows}=akData(akClient,akMonth);
-  if(rows.length===0){
-    html+=`<div class="empty">Geen uren voor ${escapeHtml(clientName(akClient))} in ${monthLabel(akMonth)}.</div></div>`;
-    el("tab-akkoord").innerHTML=html; wireAkkoord(); return;
+  // Verlof onderaan (alleen bij 'alle opdrachtgevers'; verlof is niet klant-gebonden)
+  const lvRows=[]; let lv=0;
+  if(!filter){
+    for(let d=1; d<=daysInMonth; d++){
+      const date=new Date(y,m-1,d), k=keyOf(date), h=getLeave(k);
+      if(h>0){ lv+=h; lvRows.push([t(d+"-"+m+"-"+y,8),t(DAYNAMES[(date.getDay()+6)%7],3),t("Verlof",3),t("",3),num(h,4),t("",3),t("",3),t("",3)]); }
+    }
   }
 
-  html+=`<table class="rep"><thead><tr><th>Datum</th><th>Dag</th>`;
-  projs.forEach(p=>{ html+=`<th class="num">${escapeHtml(p.name)}</th>`; });
-  html+=`<th class="num">Totaal</th></tr></thead><tbody>`;
-  let gt=0; const colTot=projs.map(()=>0);
-  rows.forEach(r=>{
-    gt+=r.tot;
-    html+=`<tr><td>${r.date.getDate()}-${r.date.getMonth()+1}-${r.date.getFullYear()}</td><td>${DAYNAMES[(r.date.getDay()+6)%7]}</td>`;
-    r.per.forEach((h,i)=>{ colTot[i]+=h; html+=`<td class="num">${h?fmtH(h):""}</td>`; });
-    html+=`<td class="num">${fmtH(r.tot)}</td></tr>`;
-  });
-  html+=`<tr class="total"><td>Totaal</td><td></td>`;
-  colTot.forEach(c=>{ html+=`<td class="num">${fmtH(c)}</td>`; });
-  html+=`<td class="num">${fmtH(gt)}</td></tr>`;
-  html+=`</tbody></table></div>`;
-  el("tab-akkoord").innerHTML=html;
-  wireAkkoord();
-}
-function wireAkkoord(){
-  const c=el("akClient"); if(c) c.onchange=()=>{ akClient=c.value; renderAkkoord(); };
-  const m=el("akMonth"); if(m) m.onchange=()=>{ akMonth=m.value||akMonth; renderAkkoord(); };
-  const x=el("akXlsx"); if(x) x.onclick=exportAkkoord;
-}
-function exportAkkoord(){
-  const {projs,rows}=akData(akClient,akMonth);
-  if(rows.length===0){ alert("Geen uren om te exporteren voor deze opdrachtgever/maand."); return; }
-  const ncol=2+projs.length+1;
-  const lastc=ncol-1;
-  const out=[];
-  out.push([t("Urenverantwoording",7)]);
-  out.push([t("Opdrachtgever:",1),t(clientName(akClient))]);
-  out.push([t("Consultant:",1),t(state.settings.consultant||"revorm")]);
-  out.push([t("Periode:",1),t(monthLabel(akMonth))]);
-  out.push([]);
-  // header
-  const head=[t("Datum",2),t("Dag",2)];
-  projs.forEach(p=>head.push(t(p.name,2)));
-  head.push(t("Totaal",2));
-  out.push(head);
-  // rows
-  const colTot=projs.map(()=>0); let gt=0;
-  rows.forEach(r=>{
-    gt+=r.tot;
-    const row=[t(r.date.getDate()+"-"+(r.date.getMonth()+1)+"-"+r.date.getFullYear(),8),t(DAYNAMES[(r.date.getDay()+6)%7],3)];
-    r.per.forEach((h,i)=>{ colTot[i]+=h; row.push(h?num(h,4):t("",3)); });
-    row.push(num(r.tot,6));
-    out.push(row);
-  });
-  // total
-  const totrow=[t("Totaal",5),t("",5)];
-  colTot.forEach(c=>totrow.push(num(c,6)));
-  totrow.push(num(gt,6));
-  out.push(totrow);
-  // signature block
-  out.push([]);
-  out.push([t("Akkoord voor bovenstaande urenverantwoording:",9)]);
-  out.push([]);
-  out.push([t("Naam manager:",1),t(state.settings.manager||"",3),t("",3)]);
-  out.push([t("Datum:",1),t("",3),t("",3)]);
-  out.push([t("Handtekening:",1),t("",3),t("",3)]);
+  if(dataRows===0 && lvRows.length===0){ alert("Geen uren in deze maand om te exporteren."); return; }
 
-  const cols=[14,14]; projs.forEach(()=>cols.push(12)); cols.push(12);
-  const merges=[
-    {sr:0,sc:0,er:0,ec:lastc},
-    {sr:out.length-5,sc:0,er:out.length-5,ec:lastc},
-    {sr:out.length-3,sc:1,er:out.length-3,ec:Math.min(2,lastc)},
-    {sr:out.length-2,sc:1,er:out.length-2,ec:Math.min(2,lastc)},
-    {sr:out.length-1,sc:1,er:out.length-1,ec:Math.min(2,lastc)}
-  ];
-  const sheet={name:"Goedkeuring",cols:cols,rows:out,merges:merges};
-  const fn="revorm_goedkeuring_"+clientName(akClient).replace(/[^a-z0-9]+/gi,"_")+"_"+akMonth+".xlsx";
+  out.push([t("Totaal",5),t("",5),t("",5),t("",5),num(tu,6),t("",5),tb?num(tb,11):t("",5),t("",5)]);
+  if(lvRows.length){
+    out.push([]);
+    out.push([t("Verlof",9)]);
+    lvRows.forEach(r=>out.push(r));
+    out.push([t("Totaal verlof",5),t("",5),t("",5),t("",5),num(lv,6),t("",5),t("",5),t("",5)]);
+  }
+
+  const cols=[12,11,24,26,9,11,13,8];
+  const sheet={name:monthLabel(repMonth),cols:cols,rows:out,merges:[{sr:0,sc:0,er:0,ec:7}]};
+  const fn="revorm_alle_uren_"+repMonth+(filter?"_"+clientName(filter).replace(/[^a-z0-9]+/gi,"_"):"")+".xlsx";
   downloadXlsx(fn,[sheet]);
 }
 
@@ -712,41 +843,44 @@ function renderBeheer(){
   if(state.clients.length===0){
     html+=`<div class="empty">Nog geen opdrachtgevers.</div>`;
   }
+  const projLine=p=>`<div class="proj-line ${p.archived?"arch":""}">
+    <span class="pn">${escapeHtml(p.name)}</span>
+    <span class="tag">${p.rate?fmtEur(p.rate)+"/u":"geen tarief"}</span>
+    <button class="btn ghost sm" data-act="editProj" data-id="${p.id}">Bewerken</button>
+    <button class="btn ghost sm" data-act="archProj" data-id="${p.id}">${p.archived?"Heropenen":"Afronden"}</button>
+    <button class="btn danger sm" data-act="delProj" data-id="${p.id}">Verwijderen</button>
+  </div>`;
   state.clients.forEach(c=>{
+    const b=c.budget||{};
     html+=`<div class="mgmt-client">
       <h3>${escapeHtml(c.name)}
         <button class="btn ghost sm" data-act="renameClient" data-id="${c.id}">Hernoemen</button>
         <button class="btn danger sm right" data-act="delClient" data-id="${c.id}">Verwijderen</button>
       </h3>`;
-    const projs=projectsOf(c.id,true);
-    if(projs.length===0) html+=`<div class="muted" style="padding:6px 0">Nog geen projecten.</div>`;
-    projs.forEach(p=>{
-      html+=`<div class="proj-line ${p.archived?"arch":""}">
-        <span class="pn">${escapeHtml(p.name)}</span>
-        <span class="tag">${p.rate?fmtEur(p.rate)+"/u":"geen tarief"}</span>
-        <button class="btn ghost sm" data-act="editProj" data-id="${p.id}">Bewerken</button>
-        <button class="btn ghost sm" data-act="archProj" data-id="${p.id}">${p.archived?"Activeren":"Archiveren"}</button>
-        <button class="btn danger sm" data-act="delProj" data-id="${p.id}">Verwijderen</button>
-      </div>`;
-    });
+    const all=projectsOf(c.id,true);
+    const active=all.filter(p=>!p.archived), done=all.filter(p=>p.archived);
+    if(all.length===0) html+=`<div class="muted" style="padding:6px 0">Nog geen projecten.</div>`;
+    active.forEach(p=>{ html+=projLine(p); });
+    if(done.length){
+      html+=`<div class="done-head">Afgerond <span class="muted">(uit weekoverzicht, blijft in rapportage)</span></div>`;
+      done.forEach(p=>{ html+=projLine(p); });
+    }
     html+=`<div class="addrow">
         <input type="text" data-newproj="${c.id}" placeholder="Naam nieuw project" style="min-width:220px">
         <input type="text" data-newrate="${c.id}" placeholder="Tarief €/u (optioneel)" style="width:160px">
         <button class="btn ghost" data-act="addProj" data-id="${c.id}">+ Project</button>
+      </div>
+      <div class="contract">
+        <label class="contract-lbl">Contract-uren (optioneel — toont voortgang in Rapportage)</label>
+        <div class="addrow">
+          <input type="text" inputmode="decimal" data-budhours="${c.id}" value="${b.hours||""}" placeholder="Max uren" style="width:120px">
+          <div class="field"><label>vanaf</label><input type="date" data-budstart="${c.id}" value="${b.start||""}"></div>
+          <div class="field"><label>t/m</label><input type="date" data-budend="${c.id}" value="${b.end||""}"></div>
+          <button class="btn ghost sm" data-act="saveBudget" data-id="${c.id}">Opslaan</button>
+        </div>
       </div></div>`;
   });
-  html+=`</div>
-
-  <div class="card">
-    <h2>Instellingen</h2>
-    <p class="sub">Deze gegevens verschijnen op je Excel-exports.</p>
-    <div class="addrow">
-      <div class="field"><label>Consultant / bedrijfsnaam</label><input type="text" id="setConsultant" value="${escapeHtml(s.consultant||"")}"></div>
-      <div class="field"><label>KvK (optioneel)</label><input type="text" id="setKvk" value="${escapeHtml(s.kvk||"")}"></div>
-      <div class="field"><label>Naam manager (optioneel)</label><input type="text" id="setManager" value="${escapeHtml(s.manager||"")}"></div>
-    </div>
-    <button class="btn sm" style="margin-top:10px" data-act="saveSettings">Instellingen opslaan</button>
-  </div>`;
+  html+=`</div>`;
   el("tab-beheer").innerHTML=html;
 }
 
@@ -793,10 +927,12 @@ document.getElementById("tab-beheer").addEventListener("click",e=>{
     deleteProjectData(id);
     state.projects=state.projects.filter(x=>x.id!==id); save(); renderBeheer();
   }
-  else if(act==="saveSettings"){
-    state.settings.consultant=el("setConsultant").value.trim()||"revorm";
-    state.settings.kvk=el("setKvk").value.trim();
-    state.settings.manager=el("setManager").value.trim();
+  else if(act==="saveBudget"){
+    const c=state.clients.find(x=>x.id===id);
+    const hrs=parseH(document.querySelector('[data-budhours="'+id+'"]').value);
+    const st=document.querySelector('[data-budstart="'+id+'"]').value;
+    const en=document.querySelector('[data-budend="'+id+'"]').value;
+    if(hrs>0) c.budget={hours:hrs,start:st||"",end:en||""}; else delete c.budget;
     save(); flash(b,"Opgeslagen ✓");
   }
   else if(act==="exportJson"){

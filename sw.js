@@ -6,7 +6,7 @@
      anders breekt de login stilletjes.
    ============================================================ */
 
-const CACHE = "revorm-uren-v3";
+const CACHE = "revorm-uren-v4";
 const SHELL = [
   "./",
   "./index.html",

@@ -1,14 +1,14 @@
 {
   "name": "revorm urenregistratie",
   "short_name": "revorm uren",
-  "description": "Urenregistratie voor revorm — weekkalender, maandrapport en goedkeuringsblad.",
+  "description": "Urenregistratie voor revorm — weekkalender, rapportage en contract-uren.",
   "lang": "nl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#f7f7fb",
-  "theme_color": "#4f46e5",
+  "background_color": "#FBFAF5",
+  "theme_color": "#1D3557",
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
